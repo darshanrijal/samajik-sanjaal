@@ -23,3 +23,7 @@ export const loginSchema = z.object({
   username: requiredString("Enter your username to login"),
   password: requiredString("Enter your password"),
 });
+
+export const createPostSchema = z.object({
+  content: requiredString(),
+});
