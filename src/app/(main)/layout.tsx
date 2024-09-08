@@ -1,11 +1,20 @@
 import { validateRequest } from "@/auth";
 import { redirect } from "next/navigation";
 import React, { PropsWithChildren } from "react";
+import { SessionProvider } from "./SessionProvider";
+import Navbar from "./Navbar";
 
 export default async function AuthLayout({ children }: PropsWithChildren) {
   const session = await validateRequest();
   if (!session.user) {
     redirect("/login");
   }
-  return <>{children}</>;
+  return (
+    <SessionProvider session={session}>
+      <div className="flex min-h-screen flex-col">
+        <Navbar />
+        <div className="mx-auto max-w-7xl p-5">{children}</div>
+      </div>
+    </SessionProvider>
+  );
 }
