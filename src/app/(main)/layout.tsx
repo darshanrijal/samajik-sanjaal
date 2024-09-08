@@ -5,7 +5,7 @@ import { SessionProvider } from "./SessionProvider";
 import Navbar from "./Navbar";
 import Menubar from "./Menubar";
 
-export default async function AuthLayout({ children }: PropsWithChildren) {
+export default async function MainLayout({ children }: PropsWithChildren) {
   const session = await validateRequest();
   if (!session.user) {
     redirect("/login");

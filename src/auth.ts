@@ -57,8 +57,6 @@ interface DatabaseUserAttributes {
 /**
  * Validates the user request and returns the User and Session data.
  * Wrapped in cache to prevent duplicate requests, storing the result in cache.
- *
- * @returns {Promise<{user: User | null, session: Session | null}>}
  *  - An object containing the User and Session, or `null` for both if validation fails.
  */
 export const validateRequest = cache(
