@@ -60,3 +60,28 @@ export function formatRelativeDate(date: Date): string {
 
   return year.toString();
 }
+
+/**
+ * Formats a number into a compact string representation.
+ *
+ * The function uses the `Intl.NumberFormat` API to format the number according to
+ * the "en-US" locale with compact notation and a maximum of one fraction digit.
+ * For example, 1234 might be formatted as "1.2K" and 56789 as "56.8K".
+ *
+ * @param {number} number - The number to be formatted.
+ * @returns {string} The formatted number as a string.
+ *
+ * @example
+ * // returns "1.2K"
+ * formatNumber(1234);
+ *
+ * @example
+ * // returns "56.8K"
+ * formatNumber(56789);
+ */
+export function formatNumber(number: number): string {
+  return Intl.NumberFormat("en-US", {
+    notation: "compact",
+    maximumFractionDigits: 1,
+  }).format(number);
+}
