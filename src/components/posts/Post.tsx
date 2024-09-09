@@ -26,8 +26,7 @@ const Post = ({ post }: PostProps) => {
             href={`/posts/${post.id}`}
             className="block text-sm text-muted-foreground hover:underline"
           >
-            {/* Threw error because createdAt is now a string because of the json response */}
-            {/* {formatRelativeDate(post.createdAt)} */}
+            {formatRelativeDate(post.createdAt)}
           </Link>
         </div>
       </div>
