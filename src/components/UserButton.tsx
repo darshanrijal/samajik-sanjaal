@@ -20,6 +20,7 @@ import { logout } from "@/app/(auth)/actions";
 import { cn } from "@/lib/utils";
 import { useTheme } from "next-themes";
 import React, { useEffect } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface UserButtonProps {
   className?: string;
@@ -28,7 +29,7 @@ interface UserButtonProps {
 const UserButton = ({ className }: UserButtonProps) => {
   const { session, user } = useSession();
   const { setTheme, theme } = useTheme();
-
+  const queryClient = useQueryClient();
   useEffect(() => {
     console.log(`theme changed to ${theme}`);
   }, [theme]);
@@ -77,7 +78,12 @@ const UserButton = ({ className }: UserButtonProps) => {
           </DropdownMenuPortal>
         </DropdownMenuSub>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => logout()}>
+        <DropdownMenuItem
+          onClick={() => {
+            queryClient.clear();
+            logout();
+          }}
+        >
           <LogOutIcon className="mr-2 size-4" />
           Logout
         </DropdownMenuItem>
