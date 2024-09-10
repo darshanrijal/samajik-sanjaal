@@ -1,0 +1,22 @@
+"use server";
+
+import { validateRequest } from "@/auth";
+import prisma from "@/lib/prisma";
+import { PostDataInclude } from "@/lib/types";
+
+export async function deletePost(postId: string) {
+  const { user } = await validateRequest();
+  if (!user) throw new Error("Unauthroized");
+  const post = await prisma.post.findUnique({
+    where: { id: postId },
+  });
+  if (!post) throw new Error("Post doesnot exist");
+  if (post.userId !== user.id) throw new Error("Unauthorized");
+  const deletedPost = await prisma.post.delete({
+    where: {
+      id: postId,
+    },
+    include: PostDataInclude,
+  });
+  return deletedPost;
+}
