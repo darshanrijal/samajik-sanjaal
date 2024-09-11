@@ -85,3 +85,35 @@ export function formatNumber(number: number): string {
     maximumFractionDigits: 1,
   }).format(number);
 }
+
+/**
+ * Formats a given date into a human-readable string with the full month, day, and year.
+ *
+ * The date will be returned in the format "Month Day, Year" (e.g., "November 2, 2024").
+ * The input can be either a string (ISO 8601 date format) or a `Date` object.
+ *
+ * @param {string | Date} createdAt - The date when the profile was created. Can be a string or a `Date` object.
+ * @returns {string} - A formatted date string in the form "Month Day, Year".
+ *
+ * @example
+ * // Example usage with ISO string:
+ * const result1 = getFormattedDate('2019-06-15T12:00:00Z');
+ * console.log(result1); // "June 15, 2019"
+ *
+ * @example
+ * // Example usage with Date object:
+ * const result2 = getFormattedDate(new Date('2023-05-01T09:00:00Z'));
+ * console.log(result2); // "May 1, 2023"
+ */
+export function getFormattedDate(createdAt: string | Date): string {
+  const createdDate = new Date(createdAt);
+
+  // Format date as "November 2, 2024"
+  const formattedDate = createdDate.toLocaleDateString(undefined, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
+  return formattedDate;
+}
