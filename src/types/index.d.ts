@@ -8,3 +8,8 @@ declare interface PostsPage {
   posts: PostData[];
   nextCursor: string | null;
 }
+
+declare interface FollowerInfo {
+  followers: number;
+  isFollowedByUser: boolean;
+}
