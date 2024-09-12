@@ -27,3 +27,8 @@ export const loginSchema = z.object({
 export const createPostSchema = z.object({
   content: requiredString(),
 });
+
+export const updateUserProfileSchema = z.object({
+  displayName: requiredString("Display name is required"),
+  bio: z.string().max(1000, "Must be at most 1000 characters"),
+});
