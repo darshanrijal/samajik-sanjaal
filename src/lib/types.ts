@@ -30,13 +30,14 @@ export function getUserDataSelect(loggedInUserId: string) {
 /**
  *
  * @param loggedInUserId The logged in user's id
- * @returns Prisma user with the type User including followers and count of followers
+ * @returns Prisma user with the type User including followers, attachment , count of followers
  */
 export function getPostDataInclude(loggedInUserId: string) {
   return {
     user: {
       select: getUserDataSelect(loggedInUserId),
     },
+    attachments: true,
   } satisfies Prisma.PostInclude;
 }
 
