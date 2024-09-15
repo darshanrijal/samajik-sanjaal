@@ -19,6 +19,8 @@ const envSchema = z.object({
   UPLOADTHING_SECRET: requiredEnv,
 
   NEXT_PUBLIC_UPLOADTHING_APP_ID: requiredEnv,
+
+  CRON_SECRET: requiredEnv,
 });
 
 /**
