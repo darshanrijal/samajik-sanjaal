@@ -30,7 +30,7 @@ export function getUserDataSelect(loggedInUserId: string) {
 /**
  *
  * @param loggedInUserId The logged in user's id
- * @returns Prisma user with the type User including followers, attachment , count of followers
+ * @returns Prisma user with the type User including followers, attachment , count of followers, bookmarks......
  */
 export function getPostDataInclude(loggedInUserId: string) {
   return {
@@ -39,6 +39,14 @@ export function getPostDataInclude(loggedInUserId: string) {
     },
     attachments: true,
     likes: {
+      where: {
+        userId: loggedInUserId,
+      },
+      select: {
+        userId: true,
+      },
+    },
+    bookmarks: {
       where: {
         userId: loggedInUserId,
       },
@@ -61,4 +69,8 @@ export type PostData = Prisma.PostGetPayload<{
 export interface LikeInfo {
   likes: number;
   isLikedByUser: boolean;
+}
+
+export interface BookmarkInfo {
+  isBookmarkedByUser: boolean;
 }
