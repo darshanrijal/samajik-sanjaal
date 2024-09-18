@@ -50,7 +50,7 @@ export default function Notifications() {
 
   useEffect(() => {
     mutation.mutate();
-  }, []);
+  }, [mutation]);
 
   const notifications = data?.pages.flatMap((page) => page.notifications) || [];
 

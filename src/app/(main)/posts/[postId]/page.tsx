@@ -1,3 +1,4 @@
+import React, { cache, Suspense } from "react";
 import { validateRequest } from "@/auth";
 import FollowButton from "@/components/FollowButton";
 import Linkify from "@/components/Linkify";
@@ -11,7 +12,6 @@ import { Loader2 } from "lucide-react";
 import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import React, { cache, Suspense } from "react";
 
 interface PageProps {
   params: { postId: string };

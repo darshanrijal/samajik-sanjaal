@@ -1,6 +1,6 @@
 "use client";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import React, { useState } from "react";
 import UserAvatar from "../UserAvatar";
 import { PostData } from "@/lib/types";
 import { cn, formatRelativeDate } from "@/lib/utils";
@@ -14,6 +14,7 @@ import LikeButton from "./LikeButton";
 import BookmarkButton from "./BookmarkButton";
 import { MessagesSquare } from "lucide-react";
 import Comments from "../comments/Comments";
+import { usePathname } from "next/navigation";
 
 interface PostProps {
   post: PostData;
@@ -22,6 +23,14 @@ interface PostProps {
 const Post = ({ post }: PostProps) => {
   const { user } = useSession();
   const [showComments, setShowComments] = useState(false);
+  const pathname = usePathname();
+
+  useEffect(() => {
+    if (pathname.startsWith("/posts")) {
+      setShowComments(true);
+    }
+  }, [pathname]);
+
   return (
     <article className="group/post space-y-3 rounded-2xl bg-card p-5 shadow-sm">
       <div className="flex justify-between gap-3">
