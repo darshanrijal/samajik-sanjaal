@@ -18,3 +18,16 @@ declare interface FollowerInfo {
 declare type UserData = Prisma.UserGetPayload<{
   select: ReturnType<typeof getUserDataSelect>;
 }>;
+
+/**
+ * Returns the following attributes from google oauth consent
+ */
+declare type GoogleUserInfo = {
+  sub: string;
+  name: string;
+  given_name: string;
+  family_name: string;
+  picture: string;
+  email: string;
+  email_verified: boolean;
+};

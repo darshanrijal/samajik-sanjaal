@@ -4,6 +4,7 @@ import { PrismaAdapter } from "@lucia-auth/adapter-prisma";
 import prisma from "@/lib/prisma";
 import { cache } from "react";
 import { cookies } from "next/headers";
+import { Google } from "arctic";
 
 const adapter = new PrismaAdapter(prisma.session, prisma.user);
 
@@ -27,11 +28,8 @@ export const lucia = new Lucia(adapter, {
       id: attributes.id,
       username: attributes.username,
       displayName: attributes.displayName,
-      email: attributes.email,
       googleId: attributes.googleId,
       avatarUrl: attributes.avatarUrl,
-      bio: attributes.bio,
-      profileCreatedDate: attributes.createdAt,
     };
   },
 });
@@ -47,11 +45,8 @@ interface DatabaseUserAttributes {
   id: string;
   username: string;
   displayName: string;
-  email: string | null;
   googleId: string | null;
   avatarUrl: string | null;
-  bio: string | null;
-  createdAt: Date;
 }
 
 /**
@@ -92,4 +87,10 @@ export const validateRequest = cache(
     } catch {}
     return result;
   },
+);
+
+export const google = new Google(
+  process.env.GOOGLE_CLIENT_ID!,
+  process.env.GOOGLE_CLIENT_SECRET!,
+  `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/callback/google`,
 );

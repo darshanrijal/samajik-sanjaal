@@ -72,6 +72,7 @@ export function formatRelativeDate(date: Date): string {
  * @returns {string} The formatted number as a string.
  *
  * @example
+
  * // returns "1.2K"
  * formatNumber(1234);
  *
@@ -116,4 +117,30 @@ export function getFormattedDate(createdAt: string | Date): string {
   });
 
   return formattedDate;
+}
+
+/**
+ * Converts a string into a URL-friendly "slug" format.
+ *
+ * The function performs the following transformations:
+ * 1. Converts the input string to lowercase.
+ * 2. Replaces all spaces with hyphens.
+ * 3. Removes all characters that are not lowercase letters, numbers, or hyphens.
+ *
+ * @param {string} input - The input string to be transformed into a slug.
+ * @returns {string}  The slugified version of the input string.
+ *
+ * @example
+ * // returns 'john-doe'
+ * slugUsername('John Doe!');
+ *
+ * @example
+ * // returns 'hello-world-123'
+ * slugUsername('Hello World 123!');
+ */
+export function slugUsername(input: string) {
+  return input
+    .toLocaleLowerCase()
+    .replace(/ /g, "-")
+    .replace(/[^a-z0-9-]/g, "");
 }
