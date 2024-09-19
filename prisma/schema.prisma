@@ -15,6 +15,7 @@ model User {
   email        String?    @unique
   passwordHash String?
   googleId     String?    @unique
+  githubId     Int?       @unique
   avatarUrl    String?
   bio          String?
   posts        Post[]

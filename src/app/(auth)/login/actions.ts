@@ -10,6 +10,7 @@ import { verify } from "@node-rs/argon2";
 import { z } from "zod";
 import { lucia } from "@/auth";
 import { cookies } from "next/headers";
+import { ActionResult } from "@/types";
 
 export async function login(
   credentials: z.infer<typeof loginSchema>,
