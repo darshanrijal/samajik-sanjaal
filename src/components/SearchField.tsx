@@ -1,6 +1,6 @@
 "use client";
 
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 
 import { Input } from "@/components/ui/input";
 import { SearchIcon } from "lucide-react";
@@ -9,6 +9,9 @@ import { FormEvent, useRef } from "react";
 const SearchField = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const pathname = usePathname();
+  const hashtag = pathname.split("/")[2];
+
   function handleSearch(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -26,7 +29,7 @@ const SearchField = () => {
           name="q"
           placeholder="Search someone"
           className="pe-10"
-          defaultValue={searchParams.get("q")?.toString()}
+          defaultValue={searchParams.get("q")?.toString() || `#${hashtag}`}
         />
         <SearchIcon className="absolute right-3 top-1/2 -translate-y-1/2 transform text-muted-foreground" />
       </div>
