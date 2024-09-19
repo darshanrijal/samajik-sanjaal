@@ -3,13 +3,15 @@
 import { signupSchema } from "@/lib/validation";
 import { z } from "zod";
 import { hash } from "@node-rs/argon2";
-import { Cookie, generateIdFromEntropySize } from "lucia";
+import { generateIdFromEntropySize } from "lucia";
 import { getUserByEmail, getUserByUsername } from "@/data/user";
 import prisma from "@/lib/prisma";
 import { lucia } from "@/auth";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { isRedirectError } from "next/dist/client/components/redirect";
+import { ActionResult } from "@/types";
+import streamServerChat from "@/lib/stream";
 
 export async function signup(
   credentials: z.infer<typeof signupSchema>,
@@ -32,15 +34,25 @@ export async function signup(
       parallelism: 1,
     });
     const userId = generateIdFromEntropySize(10);
-    await prisma.user.create({
-      data: {
+
+    await prisma.$transaction(async (tx) => {
+      await tx.user.create({
+        data: {
+          id: userId,
+          email,
+          username,
+          displayName: username,
+          passwordHash,
+        },
+      });
+
+      await streamServerChat.upsertUser({
         id: userId,
-        email,
         username,
-        displayName: username,
-        passwordHash,
-      },
+        name: username,
+      });
     });
+
     const session = await lucia.createSession(userId, {});
     const sessionCookie = lucia.createSessionCookie(session.id);
     cookies().set(

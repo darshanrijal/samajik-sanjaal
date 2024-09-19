@@ -3,7 +3,7 @@ import Image from "next/image";
 import React from "react";
 
 interface UserAvatarProps {
-  avatarUrl: string | null;
+  avatarUrl?: string | null;
   size?: number;
   className?: string;
 }
