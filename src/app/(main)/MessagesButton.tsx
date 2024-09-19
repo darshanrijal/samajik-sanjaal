@@ -36,7 +36,7 @@ export default function MessagesButton({ initialState }: MessagesButtonProps) {
             </span>
           )}
         </div>
-        Messages
+        <span className="hidden lg:inline">Notifications</span>
       </Link>
     </Button>
   );
