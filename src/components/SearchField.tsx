@@ -29,7 +29,10 @@ const SearchField = () => {
           name="q"
           placeholder="Search someone"
           className="pe-10"
-          defaultValue={searchParams.get("q")?.toString() || `#${hashtag}`}
+          defaultValue={
+            searchParams.get("q")?.toString() ||
+            (pathname.includes("/hashtag") ? `#${hashtag}` : undefined)
+          }
         />
         <SearchIcon className="absolute right-3 top-1/2 -translate-y-1/2 transform text-muted-foreground" />
       </div>
