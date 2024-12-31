@@ -1,12 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 
-const createPrismaClient = () =>
-  new PrismaClient({
-    log:
-      process.env.NODE_ENV === "development"
-        ? ["query", "error", "warn"]
-        : ["error"],
-  });
+const createPrismaClient = () => new PrismaClient();
 
 declare global {
   var prismaGlobal: ReturnType<typeof createPrismaClient> | undefined;

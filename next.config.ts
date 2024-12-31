@@ -6,10 +6,7 @@ const nextConfig: NextConfig = {
       dynamic: 30,
     },
   },
-  webpack: (config) => {
-    config.externals.push("@node-rs/argon2", "@node-rs/bcrypt");
-    return config;
-  },
+  serverExternalPackages: ["@node-rs/argon2"],
 };
 
 export default nextConfig;

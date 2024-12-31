@@ -27,5 +27,6 @@
   "editor.quickSuggestions": {
     "strings": "on"
   },
-  "prettier.enable": false
+  "prettier.enable": false,
+  "tailwindCSS.experimental.configFile": "./tailwind.config.ts"
 }
