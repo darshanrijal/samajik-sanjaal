@@ -16,3 +16,10 @@ export function formatRelativeDate(from: Date) {
   }
   return formatDate(from, "MMM d, yyy");
 }
+
+export function formatNumber(number: number) {
+  return Intl.NumberFormat("en-US", {
+    notation: "compact",
+    maximumFractionDigits: 2,
+  }).format(number);
+}

@@ -5,6 +5,7 @@ export type SessionUser = NonNullable<SessionValidationResult["user"]>;
 export type DBSession = NonNullable<SessionValidationResult["session"]>;
 
 export const userDataSelect = {
+  id: true,
   username: true,
   displayName: true,
   avatarUrl: true,
