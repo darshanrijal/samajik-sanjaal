@@ -2,6 +2,7 @@
 import { logout } from "@/app/(auth)/actions";
 import { useSession } from "@/hooks/use-session";
 import { cn } from "@/lib/utils";
+import { useQueryClient } from "@tanstack/react-query";
 import { Check, LogOutIcon, Monitor, Moon, Sun, UserIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
