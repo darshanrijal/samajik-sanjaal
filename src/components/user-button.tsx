@@ -24,6 +24,7 @@ interface UserButtonProps {
 export default function UserButton({ className }: UserButtonProps) {
   const { theme, setTheme } = useTheme();
   const { user } = useSession();
+  const queryClient = useQueryClient();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -71,6 +72,7 @@ export default function UserButton({ className }: UserButtonProps) {
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={() => {
+            queryClient.clear();
             logout();
           }}
         >

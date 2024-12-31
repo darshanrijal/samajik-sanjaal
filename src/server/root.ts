@@ -1,7 +1,8 @@
-import { createCallerFactory, publicProcedure, router } from "./trpc";
+import { postRouter } from "./routers/postRouter";
+import { createCallerFactory, router } from "./trpc";
 
 export const appRouter = router({
-  sayHi: publicProcedure.query(() => "Hello NextJS 15"),
+  posts: postRouter,
 });
 
 export type AppRouter = typeof appRouter;
