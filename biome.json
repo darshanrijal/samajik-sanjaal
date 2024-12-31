@@ -1,0 +1,23 @@
+{
+  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "extends": ["ultracite"],
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "double"
+    }
+  },
+  "linter": {
+    "rules": {
+      "nursery": {
+        "useSortedClasses": "warn"
+      },
+      "correctness": {
+        "noUnusedImports": {
+          "fix": "none",
+          "level": "warn"
+        },
+        "noUndeclaredVariables": "off"
+      }
+    }
+  }
+}
