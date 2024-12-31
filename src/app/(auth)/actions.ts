@@ -2,12 +2,12 @@
 
 import {
   deleteSessionTokenCookie,
+  getCurrentSession,
   invalidateSession,
-  validateRequest,
 } from "@/auth";
 import { redirect } from "next/navigation";
 export async function logout() {
-  const { session } = await validateRequest();
+  const { session } = await getCurrentSession();
   if (!session) {
     return {
       error: "Unauthorized",

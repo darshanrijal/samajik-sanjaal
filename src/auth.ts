@@ -117,7 +117,7 @@ export async function deleteSessionTokenCookie() {
   });
 }
 
-export const validateRequest = cache(
+export const getCurrentSession = cache(
   async (): Promise<SessionValidationResult> => {
     const cookieStore = await cookies();
     const token = cookieStore.get("session")?.value ?? null;

@@ -1,5 +1,5 @@
 import signupImage from "@/assets/signup-image.jpg";
-import { validateRequest } from "@/auth";
+import { getCurrentSession } from "@/auth";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title: "Sign Up",
 };
 export default async function Page() {
-  const { user } = await validateRequest();
+  const { user } = await getCurrentSession();
   if (user) {
     redirect("/");
   }
