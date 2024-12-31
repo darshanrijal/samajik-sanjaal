@@ -1,11 +1,11 @@
-// import { db } from "@/lib/prisma";
+import { db } from "@/lib/prisma";
 import { initTRPC } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
 
 export const createTRPCContext = (opts: { headers: Headers }) => {
   return {
-    // db,
+    db,
     ...opts,
   };
 };
