@@ -1,12 +1,12 @@
 import { getCurrentSession } from "@/auth";
 import { db } from "@/lib/prisma";
-import { userDataSelect } from "@/lib/types";
+import { getUserDataSelect } from "@/lib/types";
 import { formatNumber } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import { unstable_cache } from "next/cache";
 import Link from "next/link";
 import { Suspense } from "react";
-import { Button } from "./ui/button";
+import { FollowButton } from "./follow-button";
 import { UserAvatar } from "./user-avatar";
 
 export const TrendsSidebar = () => {
@@ -21,17 +21,22 @@ export const TrendsSidebar = () => {
 };
 
 async function WhoToFollow() {
-  const { user } = await getCurrentSession();
-  if (!user) {
+  const { user: loggedInUser } = await getCurrentSession();
+  if (!loggedInUser) {
     return null;
   }
   const usersToFollow = await db.user.findMany({
     where: {
       NOT: {
-        id: user.id,
+        id: loggedInUser.id,
+        followers: {
+          none: {
+            followerId: loggedInUser.id,
+          },
+        },
       },
     },
-    select: userDataSelect,
+    select: getUserDataSelect(loggedInUser.id),
     take: 5,
   });
   return (
@@ -53,7 +58,15 @@ async function WhoToFollow() {
               </p>
             </div>
           </Link>
-          <Button>Follow</Button>
+          <FollowButton
+            userId={user.id}
+            initialState={{
+              followers: user._count.followers,
+              isFollowedByUser: user.followers.some(
+                (follower) => follower.followerId === loggedInUser.id
+              ),
+            }}
+          />
         </div>
       ))}
     </div>

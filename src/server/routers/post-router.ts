@@ -1,4 +1,4 @@
-import { postDataInclude } from "@/lib/types";
+import { getPostDataInclude } from "@/lib/types";
 import { z } from "zod";
 import { protectedProcedure, router } from "../trpc";
 
@@ -16,7 +16,7 @@ export const postRouter = router({
         orderBy: {
           createdAt: "desc",
         },
-        include: postDataInclude,
+        include: getPostDataInclude(ctx.user.id),
         cursor: cursor
           ? {
               id: cursor,
