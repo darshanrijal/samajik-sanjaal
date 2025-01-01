@@ -1,4 +1,4 @@
-import { postRouter } from "./routers/postRouter";
+import { postRouter } from "./routers/post-router";
 import { createCallerFactory, router } from "./trpc";
 
 export const appRouter = router({
