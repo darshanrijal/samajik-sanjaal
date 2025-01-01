@@ -32,4 +32,43 @@ export const postRouter = router({
         nextCursor,
       };
     }),
+
+  getFollowingPosts: protectedProcedure
+    .input(
+      z.object({
+        cursor: z.string().nullish(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { cursor } = input;
+      const pagesize = 10;
+      const posts = await ctx.db.post.findMany({
+        orderBy: {
+          createdAt: "desc",
+        },
+        where: {
+          user: {
+            followers: {
+              some: {
+                followerId: ctx.user.id,
+              },
+            },
+          },
+        },
+        include: getPostDataInclude(ctx.user.id),
+        cursor: cursor
+          ? {
+              id: cursor,
+            }
+          : undefined,
+        take: pagesize + 1,
+      });
+
+      const nextCursor = posts.length > pagesize ? posts[pagesize].id : null;
+
+      return {
+        posts: posts.slice(0, pagesize),
+        nextCursor,
+      };
+    }),
 });
