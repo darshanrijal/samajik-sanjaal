@@ -1,4 +1,5 @@
 import { trpc } from "@/__rpc/react";
+import { useSession } from "@/hooks/use-session";
 import { toast } from "@/hooks/use-toast";
 import { useMutation } from "@tanstack/react-query";
 import { usePathname, useRouter } from "next/navigation";
@@ -6,7 +7,7 @@ import { deletePost } from "./actions";
 
 export function useDeletePostMutation() {
   const utils = trpc.useUtils();
-
+  const { user } = useSession();
   const router = useRouter();
   const pathname = usePathname();
 
@@ -27,6 +28,24 @@ export function useDeletePostMutation() {
           })),
         };
       });
+
+      await utils.posts.getUserPosts.cancel();
+      utils.posts.getUserPosts.setInfiniteData(
+        { userId: user.id },
+        (oldData) => {
+          if (!oldData) {
+            return;
+          }
+
+          return {
+            pageParams: oldData.pageParams,
+            pages: oldData.pages.map((page) => ({
+              nextCursor: page.nextCursor,
+              posts: page.posts.filter((post) => post.id !== deletedPost.id),
+            })),
+          };
+        }
+      );
 
       toast({ description: "Post deleted" });
 

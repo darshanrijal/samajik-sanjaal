@@ -71,4 +71,37 @@ export const postRouter = router({
         nextCursor,
       };
     }),
+  getUserPosts: protectedProcedure
+    .input(
+      z.object({
+        cursor: z.string().nullish(),
+        userId: z.string().cuid(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { cursor } = input;
+      const pagesize = 10;
+      const posts = await ctx.db.post.findMany({
+        orderBy: {
+          createdAt: "desc",
+        },
+        where: {
+          userId: input.userId,
+        },
+        include: getPostDataInclude(ctx.user.id),
+        cursor: cursor
+          ? {
+              id: cursor,
+            }
+          : undefined,
+        take: pagesize + 1,
+      });
+
+      const nextCursor = posts.length > pagesize ? posts[pagesize].id : null;
+
+      return {
+        posts: posts.slice(0, pagesize),
+        nextCursor,
+      };
+    }),
 });
