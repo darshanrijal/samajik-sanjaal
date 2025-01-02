@@ -1,4 +1,9 @@
-import { type FollowerInfo, getUserDataSelect } from "@/lib/types";
+import {
+  type FollowerInfo,
+  type PostPage,
+  getPostDataInclude,
+  getUserDataSelect,
+} from "@/lib/types";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { protectedProcedure, router } from "../trpc";
@@ -105,5 +110,43 @@ export const userRouter = router({
       }
 
       return user;
+    }),
+
+  getUserBookmarks: protectedProcedure
+    .input(
+      z.object({
+        cursor: z.string().nullish(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { cursor } = input;
+      const pagesize = 10;
+      const bookmarks = await ctx.db.bookmark.findMany({
+        where: {
+          userId: ctx.user.id,
+        },
+        include: {
+          post: {
+            include: getPostDataInclude(ctx.user.id),
+          },
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+        take: pagesize + 1,
+        cursor: cursor
+          ? {
+              id: cursor,
+            }
+          : undefined,
+      });
+
+      const nextCursor =
+        bookmarks.length > pagesize ? bookmarks[pagesize].id : null;
+
+      return {
+        posts: bookmarks.slice(0, pagesize).map((bookmark) => bookmark.post),
+        nextCursor,
+      } satisfies PostPage;
     }),
 });

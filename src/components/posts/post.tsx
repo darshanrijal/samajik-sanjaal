@@ -8,6 +8,7 @@ import Link from "next/link";
 import { Linkify } from "../linkify";
 import { UserAvatar } from "../user-avatar";
 import { UserTooltip } from "../user-tooltip";
+import { BookmarkButton } from "./bookmark-button";
 import { LikeButton } from "./like-button";
 import { PostMoreButton } from "./post-more-button";
 
@@ -59,13 +60,23 @@ export const Post = ({ post }: PostProps) => {
         <MediaPreviews attachments={post.attachments} />
       )}
       <hr className="text-muted-foreground" />
-      <LikeButton
-        postId={post.id}
-        initialState={{
-          likes: post._count.likes,
-          isLikedByUser: post.likes.some(({ userId }) => user.id === userId),
-        }}
-      />
+      <div className="flex justify-between gap-5">
+        <LikeButton
+          postId={post.id}
+          initialState={{
+            likes: post._count.likes,
+            isLikedByUser: post.likes.some(({ userId }) => user.id === userId),
+          }}
+        />
+        <BookmarkButton
+          initialState={{
+            isBookmarkedByUser: post.bookmarks.some(
+              ({ userId }) => userId === user.id
+            ),
+          }}
+          postId={post.id}
+        />
+      </div>
     </article>
   );
 };

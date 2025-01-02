@@ -16,3 +16,12 @@ export async function changeLikeInfo(isLikedByUser: boolean, postId: string) {
     ? await api.posts.deleteLike({ postId })
     : await api.posts.createLike({ postId });
 }
+
+export async function changeBookmarkInfo(
+  isBookmarkedByUser: boolean,
+  postId: string
+) {
+  return isBookmarkedByUser
+    ? await api.posts.deleteBookmark({ postId })
+    : await api.posts.createBookmark({ postId });
+}

@@ -1,4 +1,8 @@
-import { type LikeInfo, getPostDataInclude } from "@/lib/types";
+import {
+  type BookmarkInfo,
+  type LikeInfo,
+  getPostDataInclude,
+} from "@/lib/types";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { protectedProcedure, router } from "../trpc";
@@ -162,6 +166,51 @@ export const postRouter = router({
     .input(z.object({ postId: z.string().cuid() }))
     .query(async ({ ctx, input }) => {
       await ctx.db.like.deleteMany({
+        where: {
+          postId: input.postId,
+          userId: ctx.user.id,
+        },
+      });
+    }),
+
+  getBookmarkInfo: protectedProcedure
+    .input(z.object({ postId: z.string().cuid() }))
+    .query(async ({ ctx, input }) => {
+      const bookmark = await ctx.db.bookmark.findUnique({
+        where: {
+          userId_postId: {
+            userId: ctx.user.id,
+            postId: input.postId,
+          },
+        },
+      });
+
+      const data: BookmarkInfo = {
+        isBookmarkedByUser: !!bookmark,
+      };
+
+      return data;
+    }),
+
+  createBookmark: protectedProcedure
+    .input(z.object({ postId: z.string().cuid() }))
+    .query(async ({ ctx, input }) => {
+      await ctx.db.bookmark.upsert({
+        where: {
+          userId_postId: {
+            postId: input.postId,
+            userId: ctx.user.id,
+          },
+        },
+        create: { postId: input.postId, userId: ctx.user.id },
+        update: {},
+      });
+    }),
+
+  deleteBookmark: protectedProcedure
+    .input(z.object({ postId: z.string().cuid() }))
+    .query(async ({ ctx, input }) => {
+      await ctx.db.bookmark.deleteMany({
         where: {
           postId: input.postId,
           userId: ctx.user.id,
