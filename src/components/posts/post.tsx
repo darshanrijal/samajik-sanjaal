@@ -1,3 +1,4 @@
+"use client";
 import { useSession } from "@/hooks/use-session";
 import type { PostData } from "@/lib/types";
 import { cn, formatRelativeDate } from "@/lib/utils";
@@ -36,6 +37,7 @@ export const Post = ({ post }: PostProps) => {
             <Link
               href={`/posts/${post.id}`}
               className="block text-muted-foreground text-sm hover:underline"
+              suppressHydrationWarning
             >
               {formatRelativeDate(post.createdAt)}
             </Link>
