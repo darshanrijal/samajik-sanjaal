@@ -10,3 +10,9 @@ export async function changeFollowerInfo(
     ? await api.users.deleteFollower({ userId })
     : await api.users.createFollower({ userId });
 }
+
+export async function changeLikeInfo(isLikedByUser: boolean, postId: string) {
+  return isLikedByUser
+    ? await api.posts.deleteLike({ postId })
+    : await api.posts.createLike({ postId });
+}
