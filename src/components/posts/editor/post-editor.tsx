@@ -13,6 +13,7 @@ import { useRef } from "react";
 import { useSubmitPostMutation } from "./mutations";
 import "./styles.css";
 import { cn } from "@/lib/utils";
+import { useDropzone } from "@uploadthing/react";
 import Image from "next/image";
 
 export const PostEditor = () => {
@@ -24,6 +25,20 @@ export const PostEditor = () => {
     removeAttachment,
     reset: resetMediaUploads,
   } = useMediaUpload();
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop: startUpload,
+  });
+  const { onClick, ...rootProps } = getRootProps();
+
+  function onPaste(e: React.ClipboardEvent<HTMLInputElement>) {
+    const files = Array.from(e.clipboardData.items)
+      .filter((item) => item.kind === "file")
+      .map((item) => item.getAsFile()) as File[];
+
+    startUpload(files);
+  }
+
   const { user } = useSession();
   const mutation = useSubmitPostMutation();
   const editor = useEditor({
@@ -59,10 +74,17 @@ export const PostEditor = () => {
     <div className="flex flex-col gap-5 rounded-2xl bg-card p-5 shadow-sm">
       <div className="flex gap-5">
         <UserAvatar avatarUrl={user.avatarUrl} className="hidden sm:inline" />
-        <EditorContent
-          editor={editor}
-          className="max-h-80 w-full overflow-y-auto rounded-2xl bg-background px-5 py-3"
-        />
+        <div {...rootProps} className="w-full">
+          <EditorContent
+            editor={editor}
+            className={cn(
+              "max-h-80 w-full overflow-y-auto rounded-2xl bg-background px-5 py-3",
+              isDragActive && "outline-dashed"
+            )}
+            onPaste={onPaste}
+          />
+          <input {...getInputProps()} />
+        </div>
       </div>
       {!!attachments.length && (
         <AttachmentPreviews
