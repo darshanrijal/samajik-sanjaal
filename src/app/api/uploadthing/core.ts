@@ -39,6 +39,28 @@ export const fileRouter = {
       });
       return { avatarUrl: newAvatarUrl };
     }),
+
+  attachments: f({
+    image: { maxFileSize: "4MB", maxFileCount: 5 },
+    video: { maxFileSize: "64MB", maxFileCount: 5 },
+  })
+    .middleware(async () => {
+      const { user } = await getCurrentSession();
+      if (!user) {
+        throw new UploadThingError("Unauthorized");
+      }
+      return {};
+    })
+    .onUploadComplete(async ({ file }) => {
+      const media = await db.media.create({
+        data: {
+          url: file.appUrl,
+          type: file.type.startsWith("image") ? "PHOTO" : "VIDEO",
+        },
+      });
+
+      return { mediaId: media.id };
+    }),
 } satisfies FileRouter;
 
 export type AppFileRouter = typeof fileRouter;

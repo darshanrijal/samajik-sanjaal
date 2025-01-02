@@ -172,6 +172,7 @@ function AvatarInput({ src, onImageCropped }: AvatarInputProps) {
           onImageSelected(e.target.files?.[0]);
         }}
         ref={fileInputRef}
+        multiple={false}
         className="sr-only"
       />
       <button

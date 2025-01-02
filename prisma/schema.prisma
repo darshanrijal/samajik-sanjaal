@@ -45,7 +45,8 @@ model Post {
 
   createdAt DateTime @default(now())
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  attachments Media[]
 
   @@map("posts")
 }
@@ -59,4 +60,21 @@ model Follow {
 
   @@unique([followerId, followingId])
   @@map("follows")
+}
+
+enum MediaType {
+  PHOTO
+  VIDEO
+}
+
+model Media {
+  id        String    @id @default(cuid())
+  postId    String?
+  type      MediaType
+  url       String
+  createdAt DateTime  @default(now())
+
+  post Post? @relation(fields: [postId], references: [id], onDelete: SetNull)
+
+  @@map("post_media")
 }

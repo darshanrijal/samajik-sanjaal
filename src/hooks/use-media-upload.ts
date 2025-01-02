@@ -1,0 +1,92 @@
+import { useUploadThing } from "@/lib/uploadthing";
+import { useState } from "react";
+import { useToast } from "./use-toast";
+
+export type Attachment = {
+  file: File;
+  mediaId?: string;
+  isUploading: boolean;
+};
+
+export function useMediaUpload() {
+  const { toast } = useToast();
+  const [attachments, setAttachments] = useState<Attachment[]>([]);
+  const [uploadProgress, setUploadProgress] = useState<number>();
+
+  const { startUpload, isUploading } = useUploadThing("attachments", {
+    onBeforeUploadBegin(files) {
+      const renamedFiles = files.map((file) => {
+        const ext = file.name.split(".").pop();
+        return new File([file], `attachment_${crypto.randomUUID()}.${ext}`, {
+          type: file.type,
+        });
+      });
+      setAttachments((prev) => [
+        ...prev,
+        ...renamedFiles.map((file) => ({ file, isUploading: true })),
+      ]);
+
+      return renamedFiles;
+    },
+    onUploadProgress: setUploadProgress,
+    onClientUploadComplete(res) {
+      setAttachments((prev) =>
+        prev.map((a) => {
+          const uploadResult = res.find((r) => r.name === a.file.name);
+          if (!uploadResult) {
+            return a;
+          }
+
+          return {
+            ...a,
+            mediaId: uploadResult.serverData.mediaId,
+            isUploading: false,
+          };
+        })
+      );
+    },
+
+    onUploadError(e) {
+      setAttachments((prev) => prev.filter((a) => !a.isUploading));
+      toast({ variant: "destructive", description: e.message });
+    },
+  });
+
+  function handleStartUpload(files: File[]) {
+    if (isUploading) {
+      toast({
+        variant: "destructive",
+        description: "Please wait for the current upload to finish",
+      });
+      return;
+    }
+
+    if (attachments.length + files.length > 5) {
+      toast({
+        variant: "destructive",
+        description: "You can only upload upto 5 attachments for posts",
+      });
+      return;
+    }
+
+    startUpload(files);
+  }
+
+  function removeAttachment(fileName: string) {
+    setAttachments((prev) => prev.filter((a) => a.file.name !== fileName));
+  }
+
+  function reset() {
+    setAttachments([]);
+    setUploadProgress(undefined);
+  }
+
+  return {
+    startUpload: handleStartUpload,
+    attachments,
+    isUploading,
+    uploadProgress,
+    removeAttachment,
+    reset,
+  };
+}
