@@ -3,7 +3,6 @@ import { FollowButton } from "@/components/follow-button";
 import { FollowerCount } from "@/components/follower-count";
 import { Linkify } from "@/components/linkify";
 import { TrendsSidebar } from "@/components/trends-sidebar";
-import { Button } from "@/components/ui/button";
 import { UserAvatar } from "@/components/user-avatar";
 import { db } from "@/lib/prisma";
 import {
@@ -16,6 +15,7 @@ import { formatDate } from "date-fns";
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { cache } from "react";
+import { EditProfileButton } from "./edit-profile-button";
 import { UserPosts } from "./user-posts";
 
 const getUser = cache(async (username: string, loggedInUserId: string) => {
@@ -117,7 +117,7 @@ async function UserProfile({ user, loggedInUserId }: UserProfileProps) {
           </div>
         </div>
         {user.id === loggedInUserId ? (
-          <Button>Edit profile</Button>
+          <EditProfileButton user={user} />
         ) : (
           <FollowButton userId={user.id} initialState={followerInfo} />
         )}

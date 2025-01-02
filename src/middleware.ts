@@ -3,6 +3,12 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest): NextResponse {
+  // for utfs for file uploads
+  if (request.nextUrl.pathname === "/api/uploadthing") {
+    return NextResponse.next();
+  }
+
+  //   CSRF Protection
   if (request.method === "GET") {
     const response = NextResponse.next();
     const token = request.cookies.get("session")?.value ?? null;
