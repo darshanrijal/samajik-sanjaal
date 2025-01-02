@@ -1,4 +1,4 @@
-import type { FollowerInfo } from "@/lib/types";
+import { type FollowerInfo, getUserDataSelect } from "@/lib/types";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { protectedProcedure, router } from "../trpc";
@@ -79,5 +79,31 @@ export const userRouter = router({
           followingId: input.userId,
         },
       });
+    }),
+  getUserByUsername: protectedProcedure
+    .input(
+      z.object({
+        username: z.string().regex(/^[a-zA-Z0-9_-]{3,20}$/),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const user = await ctx.db.user.findFirst({
+        where: {
+          username: {
+            equals: input.username,
+            mode: "insensitive",
+          },
+        },
+        select: getUserDataSelect(ctx.user.id),
+      });
+
+      if (!user) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found with requested username",
+        });
+      }
+
+      return user;
     }),
 });

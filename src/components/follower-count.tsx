@@ -11,7 +11,7 @@ interface FollowerCountProps {
 export const FollowerCount = ({ initialState, userId }: FollowerCountProps) => {
   const { data } = useFollowerInfo(userId, initialState);
   return (
-    <span>
+    <span className="text-foreground">
       Followers:{" "}
       <span className="font-semibold">{formatNumber(data.followers)}</span>
     </span>

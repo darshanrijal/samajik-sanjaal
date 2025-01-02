@@ -1,6 +1,7 @@
 import { getCurrentSession } from "@/auth";
 import { FollowButton } from "@/components/follow-button";
 import { FollowerCount } from "@/components/follower-count";
+import { Linkify } from "@/components/linkify";
 import { TrendsSidebar } from "@/components/trends-sidebar";
 import { Button } from "@/components/ui/button";
 import { UserAvatar } from "@/components/user-avatar";
@@ -124,9 +125,11 @@ async function UserProfile({ user, loggedInUserId }: UserProfileProps) {
       {user.bio && (
         <>
           <hr />
-          <div className="overflow-hidden whitespace-pre-line break-words">
-            {user.bio}
-          </div>
+          <Linkify>
+            <div className="overflow-hidden whitespace-pre-line break-words">
+              {user.bio}
+            </div>
+          </Linkify>
         </>
       )}
     </div>
