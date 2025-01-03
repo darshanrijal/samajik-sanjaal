@@ -149,28 +149,77 @@ export const postRouter = router({
 
   createLike: protectedProcedure
     .input(z.object({ postId: z.string().cuid() }))
-    .query(async ({ ctx, input }) => {
-      await ctx.db.like.upsert({
+    .mutation(async ({ ctx, input }) => {
+      const post = await ctx.db.post.findUnique({
         where: {
-          userId_postId: {
-            postId: input.postId,
-            userId: ctx.user.id,
-          },
+          id: input.postId,
         },
-        create: { postId: input.postId, userId: ctx.user.id },
-        update: {},
+        select: {
+          userId: true,
+        },
       });
+
+      if (!post) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Post not found" });
+      }
+      await ctx.db.$transaction([
+        ctx.db.like.upsert({
+          where: {
+            userId_postId: {
+              postId: input.postId,
+              userId: ctx.user.id,
+            },
+          },
+          create: { postId: input.postId, userId: ctx.user.id },
+          update: {},
+        }),
+        ...(ctx.user.id !== post.userId
+          ? [
+              ctx.db.notification.create({
+                data: {
+                  issuerId: ctx.user.id,
+                  recipientId: post.userId,
+                  postId: input.postId,
+                  type: "LIKE",
+                },
+              }),
+            ]
+          : []),
+      ]);
     }),
 
   deleteLike: protectedProcedure
     .input(z.object({ postId: z.string().cuid() }))
-    .query(async ({ ctx, input }) => {
-      await ctx.db.like.deleteMany({
+    .mutation(async ({ ctx, input }) => {
+      const post = await ctx.db.post.findUnique({
         where: {
-          postId: input.postId,
-          userId: ctx.user.id,
+          id: input.postId,
+        },
+        select: {
+          userId: true,
         },
       });
+
+      if (!post) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Post not found" });
+      }
+
+      await ctx.db.$transaction([
+        ctx.db.like.deleteMany({
+          where: {
+            postId: input.postId,
+            userId: ctx.user.id,
+          },
+        }),
+        ctx.db.notification.deleteMany({
+          where: {
+            issuerId: ctx.user.id,
+            recipientId: post.userId,
+            postId: input.postId,
+            type: "LIKE",
+          },
+        }),
+      ]);
     }),
 
   getBookmarkInfo: protectedProcedure
@@ -194,7 +243,7 @@ export const postRouter = router({
 
   createBookmark: protectedProcedure
     .input(z.object({ postId: z.string().cuid() }))
-    .query(async ({ ctx, input }) => {
+    .mutation(async ({ ctx, input }) => {
       await ctx.db.bookmark.upsert({
         where: {
           userId_postId: {
@@ -209,7 +258,7 @@ export const postRouter = router({
 
   deleteBookmark: protectedProcedure
     .input(z.object({ postId: z.string().cuid() }))
-    .query(async ({ ctx, input }) => {
+    .mutation(async ({ ctx, input }) => {
       await ctx.db.bookmark.deleteMany({
         where: {
           postId: input.postId,

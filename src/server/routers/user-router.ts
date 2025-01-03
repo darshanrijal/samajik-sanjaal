@@ -55,20 +55,29 @@ export const userRouter = router({
         userId: z.string().cuid(),
       })
     )
-    .query(async ({ ctx, input }) => {
-      await ctx.db.follow.upsert({
-        where: {
-          followerId_followingId: {
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.$transaction([
+        ctx.db.follow.upsert({
+          where: {
+            followerId_followingId: {
+              followerId: ctx.user.id,
+              followingId: input.userId,
+            },
+          },
+          create: {
             followerId: ctx.user.id,
             followingId: input.userId,
           },
-        },
-        create: {
-          followerId: ctx.user.id,
-          followingId: input.userId,
-        },
-        update: {},
-      });
+          update: {},
+        }),
+        ctx.db.notification.create({
+          data: {
+            issuerId: ctx.user.id,
+            recipientId: input.userId,
+            type: "FOLLOW",
+          },
+        }),
+      ]);
     }),
 
   deleteFollower: protectedProcedure
@@ -77,13 +86,22 @@ export const userRouter = router({
         userId: z.string().cuid(),
       })
     )
-    .query(async ({ ctx, input }) => {
-      await ctx.db.follow.deleteMany({
-        where: {
-          followerId: ctx.user.id,
-          followingId: input.userId,
-        },
-      });
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.$transaction([
+        ctx.db.follow.deleteMany({
+          where: {
+            followerId: ctx.user.id,
+            followingId: input.userId,
+          },
+        }),
+        ctx.db.notification.deleteMany({
+          where: {
+            issuerId: ctx.user.id,
+            recipientId: input.userId,
+            type: "FOLLOW",
+          },
+        }),
+      ]);
     }),
   getUserByUsername: protectedProcedure
     .input(
