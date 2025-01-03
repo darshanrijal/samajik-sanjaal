@@ -51,7 +51,9 @@ export const UserTooltip = ({ user, children }: UserTooltipProps) => {
             </div>
             {user.bio && (
               <Linkify>
-                <p className="line-clamp-4 whitespace-pre-line">{user.bio}</p>
+                <p className="line-clamp-4 whitespace-pre-line text-card-foreground">
+                  {user.bio}
+                </p>
               </Linkify>
             )}
 
