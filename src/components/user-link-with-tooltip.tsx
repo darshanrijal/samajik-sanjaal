@@ -1,7 +1,7 @@
 "use client";
-
 import { trpc } from "@/__rpc/react";
 import Link from "next/link";
+import type React from "react";
 import { UserTooltip } from "./user-tooltip";
 
 interface UserLinkWithTooltipProps extends React.PropsWithChildren {

@@ -2,6 +2,7 @@ import { TRPCReactProvider } from "@/__rpc/react";
 import { HydrateClient, api } from "@/__rpc/server";
 import { getCurrentSession } from "@/auth";
 import { redirect } from "next/navigation";
+import type React from "react";
 import { MenuBar } from "./menubar";
 import { Navbar } from "./navbar";
 import { SessionProvider } from "./session-provider";

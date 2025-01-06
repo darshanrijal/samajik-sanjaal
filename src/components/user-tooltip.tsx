@@ -3,6 +3,7 @@
 import { useSession } from "@/hooks/use-session";
 import type { FollowerInfo, UserData } from "@/lib/types";
 import Link from "next/link";
+import type React from "react";
 import { FollowButton } from "./follow-button";
 import { FollowerCount } from "./follower-count";
 import { Linkify } from "./linkify";

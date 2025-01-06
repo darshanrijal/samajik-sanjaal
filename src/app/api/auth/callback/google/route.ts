@@ -6,6 +6,7 @@ import {
 } from "@/auth";
 import { db } from "@/lib/prisma";
 import { streamServerClient } from "@/lib/stream";
+import type { Claims } from "@/lib/types";
 import { decodeIdToken } from "arctic";
 import type { OAuth2Tokens } from "arctic";
 import { cookies } from "next/headers";

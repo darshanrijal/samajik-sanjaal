@@ -4,6 +4,7 @@ import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import type { Metadata } from "next";
 import { ThemeProvider } from "next-themes";
 import { Inter } from "next/font/google";
+import type React from "react";
 import { extractRouterConfig } from "uploadthing/server";
 import "./globals.css";
 

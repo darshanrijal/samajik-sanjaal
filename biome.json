@@ -8,15 +8,7 @@
   },
   "linter": {
     "rules": {
-      "nursery": {
-        "useSortedClasses": "warn"
-      },
       "correctness": {
-        "noUnusedImports": {
-          "fix": "none",
-          "level": "warn"
-        },
-        "noUndeclaredVariables": "off",
         "noUnknownFunction": "off"
       }
     }

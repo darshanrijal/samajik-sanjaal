@@ -2,6 +2,7 @@ import type { PostData } from "@/lib/types";
 import { Loader2, SendHorizonal } from "lucide-react";
 import Form from "next/form";
 import { useState } from "react";
+import type React from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { useSubmitCommentMutation } from "./mutations";

@@ -15,6 +15,7 @@ import "./styles.css";
 import { cn } from "@/lib/utils";
 import { useDropzone } from "@uploadthing/react";
 import Image from "next/image";
+import type React from "react";
 
 export const PostEditor = () => {
   const {

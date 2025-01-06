@@ -122,3 +122,19 @@ export const notificationsInclude = {
 export type NotificationData = Prisma.NotificationGetPayload<{
   include: typeof notificationsInclude;
 }>;
+
+export type Claims = {
+  iss: string;
+  azp: string;
+  aud: string;
+  sub: string;
+  email: string;
+  email_verified: boolean;
+  at_hash: string;
+  name: string;
+  picture: string;
+  given_name: string;
+  family_name: string;
+  iat: number;
+  exp: number;
+};
