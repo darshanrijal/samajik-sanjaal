@@ -15,6 +15,7 @@ export default async function MainLayout({
   }
 
   api.notifications.getUnreadCount.prefetch();
+  api.stream.getStreamUnreadCount.prefetch();
 
   return (
     <SessionProvider session={session}>

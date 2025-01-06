@@ -1,8 +1,9 @@
 import { api } from "@/__rpc/server";
 import { getCurrentSession } from "@/auth";
 import { Button } from "@/components/ui/button";
-import { Bookmark, Home, Mail } from "lucide-react";
+import { Bookmark, Home } from "lucide-react";
 import Link from "next/link";
+import { MessagesButton } from "./messages-button";
 import { NotificationsButton } from "./notifications-button";
 
 interface MenuBarProps {
@@ -15,7 +16,11 @@ export const MenuBar = async ({ className }: MenuBarProps) => {
     return null;
   }
 
-  const unreadNotificationsCount = await api.notifications.getUnreadCount();
+  const [unreadNotificationsCount, unreadMessagesCount] = await Promise.all([
+    api.notifications.getUnreadCount(),
+    api.stream.getStreamUnreadCount(),
+  ]);
+
   return (
     <div className={className}>
       <Button
@@ -30,17 +35,7 @@ export const MenuBar = async ({ className }: MenuBarProps) => {
         </Link>
       </Button>
       <NotificationsButton initialState={unreadNotificationsCount} />
-      <Button
-        variant="ghost"
-        className="flex items-center justify-start gap-3"
-        title="Messages"
-        asChild
-      >
-        <Link href="/messages">
-          <Mail />
-          <span className="hidden lg:inline">Messages</span>
-        </Link>
-      </Button>
+      <MessagesButton initialState={unreadMessagesCount} />
       <Button
         variant="ghost"
         className="flex items-center justify-start gap-3"

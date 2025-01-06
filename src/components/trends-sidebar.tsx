@@ -28,12 +28,12 @@ async function WhoToFollow() {
   }
   const usersToFollow = await db.user.findMany({
     where: {
-      NOT: {
-        id: loggedInUser.id,
-        followers: {
-          none: {
-            followerId: loggedInUser.id,
-          },
+      id: {
+        not: loggedInUser.id,
+      },
+      followers: {
+        none: {
+          followerId: loggedInUser.id,
         },
       },
     },

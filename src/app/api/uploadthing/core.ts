@@ -1,5 +1,6 @@
 import { getCurrentSession } from "@/auth";
 import { db } from "@/lib/prisma";
+import { streamServerClient } from "@/lib/stream";
 import { type FileRouter, createUploadthing } from "uploadthing/next";
 import { UTApi, UploadThingError } from "uploadthing/server";
 
@@ -29,14 +30,23 @@ export const fileRouter = {
         `/a/${process.env.NEXT_PUBLIC_UPLOADTHING_APP_ID}/`
       );
 
-      await db.user.update({
-        where: {
+      await Promise.all([
+        db.user.update({
+          where: {
+            id: metadata.user.id,
+          },
+          data: {
+            avatarUrl: newAvatarUrl,
+          },
+        }),
+        streamServerClient.partialUpdateUser({
           id: metadata.user.id,
-        },
-        data: {
-          avatarUrl: newAvatarUrl,
-        },
-      });
+          set: {
+            image: newAvatarUrl,
+          },
+        }),
+      ]);
+
       return { avatarUrl: newAvatarUrl };
     }),
 

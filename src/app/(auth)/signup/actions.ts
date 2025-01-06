@@ -5,6 +5,7 @@ import {
   setSessionTokenCookie,
 } from "@/auth";
 import { db } from "@/lib/prisma";
+import { streamServerClient } from "@/lib/stream";
 import { type SignUpValues, signUpSchema } from "@/lib/validation";
 import { hash } from "@node-rs/argon2";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
@@ -47,14 +48,24 @@ export async function signUp(
         error: "Email is already taken",
       };
     }
-    const newUser = await db.user.create({
-      data: {
-        username,
-        displayName: username,
-        email,
-        passwordHash,
-      },
+
+    const newUser = await db.$transaction(async (tx) => {
+      const newUser = await tx.user.create({
+        data: {
+          username,
+          displayName: username,
+          email,
+          passwordHash,
+        },
+      });
+      await streamServerClient.upsertUser({
+        id: newUser.id,
+        username: newUser.username,
+        name: newUser.username,
+      });
+      return newUser;
     });
+
     const sessionToken = generateSessionToken();
     const session = await createSession(sessionToken, newUser.id);
     await setSessionTokenCookie(sessionToken, session.expiresAt);
