@@ -72,7 +72,7 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
   );
 }
 
-function getBaseUrl() {
+export function getBaseUrl() {
   if (typeof window !== "undefined") {
     return window.location.origin;
   }

@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { GoogleSignInButton } from "./google-sign-in-button";
 import LoginForm from "./login-form";
 export const metadata: Metadata = {
   title: "Login",
@@ -19,6 +20,12 @@ export default async function Page() {
         <div className="w-full space-y-10 overflow-y-auto p-10 md:w-1/2">
           <h1 className="text-center font-bold text-3xl">Login to bugbook</h1>
           <div className="space-y-5">
+            <GoogleSignInButton />
+            <div className="flex items-center gap-3">
+              <div className="h-px flex-1 bg-muted" />
+              <span>OR</span>
+              <div className="h-px flex-1 bg-muted" />
+            </div>
             <LoginForm />
             <Link href="/signup" className="block text-center hover:underline">
               Don&apos;t have an account? Sign up

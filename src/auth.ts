@@ -4,6 +4,7 @@ import {
   encodeHexLowerCase,
 } from "@oslojs/encoding";
 import type { Prisma, Session } from "@prisma/client";
+import { Google } from "arctic";
 import { cookies } from "next/headers";
 import { cache } from "react";
 import { db } from "./lib/prisma";
@@ -127,4 +128,18 @@ export const getCurrentSession = cache(
     const result = await validateSessionToken(token);
     return result;
   }
+);
+
+const googleClientId = process.env.GOOGLE_CLIENT_ID;
+const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET;
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+
+if (!googleClientId || !googleClientSecret || !baseUrl) {
+  throw new Error("No google credentials assigned");
+}
+
+export const google = new Google(
+  googleClientId,
+  googleClientSecret,
+  `${baseUrl}/api/auth/callback/google`
 );
