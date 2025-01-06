@@ -21,6 +21,15 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // biome-ignore lint/suspicious/useAwait: If removed "async" throws error, if kept biome throws an error, better to write this explanation
+  async rewrites() {
+    return [
+      {
+        source: "/hashtag/:tag",
+        destination: "/search?q=%23:tag",
+      },
+    ];
+  },
 };
 
 export default nextConfig;
