@@ -1,4 +1,3 @@
-import { trpc } from "@/__rpc/react";
 import type { PostData } from "@/lib/types";
 import { Loader2, SendHorizonal } from "lucide-react";
 import Form from "next/form";

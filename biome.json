@@ -16,7 +16,8 @@
           "fix": "none",
           "level": "warn"
         },
-        "noUndeclaredVariables": "off"
+        "noUndeclaredVariables": "off",
+        "noUnknownFunction": "off"
       }
     }
   }
